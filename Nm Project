@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Workshop Registration App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Workshop Registration</h1>
+
+    <form id="registrationForm">
+        <input type="text" id="name" placeholder="Participant Name" required>
+
+        <input type="email" id="email" placeholder="Email Address" required>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div id="message"></div>
+
+    <h2>Registered Participants</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody id="participantList">
+        </tbody>
+    </table>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    background: linear-gradient(135deg,#1e3c72,#2a5298);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:800px;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h1{
+    text-align:center;
+    color:#1e3c72;
+    margin-bottom:25px;
+}
+
+form{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+input{
+    flex:1;
+    min-width:250px;
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+}
+
+input:focus{
+    outline:none;
+    border-color:#2a5298;
+}
+
+button{
+    padding:12px 25px;
+    border:none;
+    background:#1e3c72;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    transition:.3s;
+}
+
+button:hover{
+    background:#2a5298;
+}
+
+#message{
+    text-align:center;
+    font-weight:bold;
+    margin:15px 0;
+}
+
+.success{
+    color:green;
+}
+
+.error{
+    color:red;
+}
+
+h2{
+    margin-top:20px;
+    color:#1e3c72;
+}
+
+table{
+    width:100%;
+    margin-top:15px;
+    border-collapse:collapse;
+}
+
+table th{
+    background:#1e3c72;
+    color:white;
+    padding:12px;
+}
+
+table td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:center;
+}
+
+tr:nth-child(even){
+    background:#f4f6f9;
+}
+ const form = document.getElementById("registrationForm");
+const participantList = document.getElementById("participantList");
+const message = document.getElementById("message");
+
+let participants = [];
+
+form.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+
+    const duplicate = participants.find(
+        participant => participant.email.toLowerCase() === email.toLowerCase()
+    );
+
+    if(duplicate){
+        message.textContent = "Participant already registered!";
+        message.className = "error";
+        return;
+    }
+
+    participants.push({name,email});
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${name}</td>
+        <td>${email}</td>
+    `;
+
+    participantList.appendChild(row);
+
+    message.textContent = `Registration Successful! Confirmation sent to ${email}`;
+    message.className = "success";
+
+    form.reset();
+});
